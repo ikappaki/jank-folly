@@ -18,7 +18,7 @@
 
 #include <sys/types.h>
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW32__)
 #include <basetsd.h> // @manual
 
 // This is a massive pain to have be an `int` due to the pthread implementation

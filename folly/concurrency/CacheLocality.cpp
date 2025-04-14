@@ -36,6 +36,10 @@
 #include <folly/portability/Unistd.h>
 #include <folly/system/ThreadId.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 namespace folly {
 
 ///////////// CacheLocality
@@ -50,7 +54,13 @@ static CacheLocality getSystemLocalityInfo() {
     }
   }
 
+#ifdef _WIN32
+  SYSTEM_INFO sysinfo;
+  GetSystemInfo(&sysinfo);
+  long numCpus = sysinfo.dwNumberOfProcessors;
+#else
   long numCpus = sysconf(_SC_NPROCESSORS_CONF);
+#endif
   if (numCpus <= 0) {
     // This shouldn't happen, but if it does we should try to keep
     // going.  We are probably not going to be able to parse /sys on
@@ -321,7 +331,7 @@ CacheLocality CacheLocality::uniform(size_t numCpus) {
 ////////////// Getcpu
 
 Getcpu::Func Getcpu::resolveVdsoFunc() {
-#if !defined(FOLLY_HAVE_LINUX_VDSO) || defined(FOLLY_SANITIZE_MEMORY)
+#if !defined(FOLLY_HAVE_LINUX_VDSO) || defined(FOLLY_SANITIZE_MEMORY) || defined(_WIN32)
   return nullptr;
 #else
   void* h = dlopen("linux-vdso.so.1", RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
