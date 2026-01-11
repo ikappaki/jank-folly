@@ -65,6 +65,7 @@ static int closeOnlyFileDescriptor(int fd) {
     return -1;
   }
   int c = 0;
+#if defined(_MSC_VER)
   __try {
     // We expect this to fail. It still closes the file descriptor though.
     c = ::_close(fd);
@@ -77,6 +78,11 @@ static int closeOnlyFileDescriptor(int fd) {
     // We told it to continue execution, so nothing here would
     // be run anyways.
   }
+#elif defined(__MINGW64__)
+  c = ::_close(fd); // just call close normally
+#else
+# error "unsupported"
+#endif
   // We're at the core, we don't get the luxery of SCOPE_EXIT because
   // of circular dependencies.
   if (!SetHandleInformation(h, protectFlag, handleFlags)) {

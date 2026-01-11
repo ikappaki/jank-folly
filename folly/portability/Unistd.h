@@ -85,8 +85,10 @@ pid_t getppid();
 int getuid();
 int isatty(int fh);
 int lockf(int fd, int cmd, off_t len);
+#ifndef __MINGW64__
 off_t lseek(int fh, off_t off, int orig);
 off64_t lseek64(int fh, off64_t off, int orig);
+#endif
 ssize_t read(int fh, void* buf, size_t mcc);
 int rmdir(const char* path);
 int pipe(int pth[2]);

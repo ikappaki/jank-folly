@@ -16,8 +16,7 @@
 
 #include <folly/portability/Sockets.h>
 
-#ifdef _MSC_VER
-
+#if defined(_MSC_VER) || defined(__MINGW64__)
 #include <errno.h>
 #include <fcntl.h>
 

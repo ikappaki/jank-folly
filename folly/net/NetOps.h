@@ -249,7 +249,7 @@ struct mmsghdr {
 #endif
 
 // Various sendmsg structs and ops.
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(__MINGW64__)
 #define XPLAT_MSGHDR WSAMSG
 #define XPLAT_CMSGHDR WSACMSGHDR
 #define F_CMSG_LEN WSA_CMSG_LEN

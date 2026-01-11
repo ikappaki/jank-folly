@@ -42,7 +42,9 @@ static_assert(
 
 #include <folly/net/detail/SocketFileDescriptorMap.h>
 #include <folly/portability/Sockets.h>
+#ifndef __MINGW64__
 #include <folly/portability/Windows.h>
+#endif
 
 #include <tlhelp32.h> // @manual
 
@@ -262,6 +264,11 @@ int getdtablesize() {
   return _getmaxstdio();
 }
 
+#ifdef __MINGW64__
+typedef int gid_t;
+typedef int uid_t;
+#endif
+
 gid_t getgid() {
   return 1;
 }
@@ -286,6 +293,7 @@ int lockf(int fd, int cmd, off_t len) {
   return _locking(fd, cmd, len);
 }
 
+#ifndef __MINGW64__
 off_t lseek(int fh, off_t off, int orig) {
   return _lseek(fh, off, orig);
 }
@@ -293,6 +301,7 @@ off_t lseek(int fh, off_t off, int orig) {
 off64_t lseek64(int fh, off64_t off, int orig) {
   return _lseeki64(fh, static_cast<int64_t>(off), orig);
 }
+#endif
 
 int rmdir(const char* path) {
   return _rmdir(path);
