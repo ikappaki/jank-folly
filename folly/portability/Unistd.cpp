@@ -293,6 +293,9 @@ int lockf(int fd, int cmd, off_t len) {
   return _locking(fd, cmd, len);
 }
 
+int fileno(FILE* stream) { return _fileno(stream); }
+int unlink(const char *path) { return _unlink(path); };
+
 #ifndef __MINGW64__
 off_t lseek(int fh, off_t off, int orig) {
   return _lseek(fh, off, orig);

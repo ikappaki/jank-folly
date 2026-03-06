@@ -31,6 +31,10 @@ ssize_t pread64(int fd, void* buf, size_t count, off64_t offset);
 
 #else
 
+#ifdef __MINGW64__
+#include <cstdio>
+#endif
+
 #include <cstdint>
 
 #include <process.h> // @manual
@@ -85,6 +89,11 @@ pid_t getppid();
 int getuid();
 int isatty(int fh);
 int lockf(int fd, int cmd, off_t len);
+
+// Additional unistd functions provided to support jank libraries
+int fileno(FILE* stream);
+int unlink(const char *path);
+
 #ifndef __MINGW64__
 off_t lseek(int fh, off_t off, int orig);
 off64_t lseek64(int fh, off64_t off, int orig);
