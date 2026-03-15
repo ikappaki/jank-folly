@@ -34,11 +34,10 @@
 #include <folly/hash/Hash.h>
 #include <folly/lang/Exception.h>
 #include <folly/portability/Unistd.h>
-#include <folly/system/ThreadId.h>
-
 #ifdef _WIN32
-#include <windows.h>
+#include <folly/portability/Windows.h>
 #endif
+#include <folly/system/ThreadId.h>
 
 namespace folly {
 

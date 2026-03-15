@@ -28,7 +28,9 @@
 #ifdef _WIN32
 
 #include <WS2tcpip.h> // @manual
-
+#ifdef __MINGW64__
+#include <mswsock.h>
+#endif
 using nfds_t = int;
 using sa_family_t = ADDRESS_FAMILY;
 
@@ -249,7 +251,7 @@ struct mmsghdr {
 #endif
 
 // Various sendmsg structs and ops.
-#if defined(_WIN32) && !defined(__MINGW64__)
+#ifdef _WIN32
 #define XPLAT_MSGHDR WSAMSG
 #define XPLAT_CMSGHDR WSACMSGHDR
 #define F_CMSG_LEN WSA_CMSG_LEN
