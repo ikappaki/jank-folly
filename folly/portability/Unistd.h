@@ -91,7 +91,6 @@ int isatty(int fh);
 int lockf(int fd, int cmd, off_t len);
 
 // Additional unistd functions provided to support jank libraries
-int fileno(FILE* stream);
 int unlink(const char *path);
 
 #ifndef __MINGW64__

@@ -42,9 +42,7 @@ static_assert(
 
 #include <folly/net/detail/SocketFileDescriptorMap.h>
 #include <folly/portability/Sockets.h>
-#ifndef __MINGW64__
 #include <folly/portability/Windows.h>
-#endif
 
 #include <tlhelp32.h> // @manual
 
@@ -293,7 +291,6 @@ int lockf(int fd, int cmd, off_t len) {
   return _locking(fd, cmd, len);
 }
 
-int fileno(FILE* stream) { return _fileno(stream); }
 int unlink(const char *path) { return _unlink(path); };
 
 #ifndef __MINGW64__

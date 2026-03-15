@@ -795,7 +795,7 @@ int set_socket_close_on_exec(NetworkSocket s) {
 void Msgheader::setName(sockaddr_storage* addrStorage, size_t len) {
   FOLLY_PUSH_WARNING
   FOLLY_CLANG_DISABLE_WARNING("-Wundef")
-#if defined(_WIN32) && !defined(__MINGW64__)
+#ifdef _WIN32
   msg_.name = reinterpret_cast<LPSOCKADDR>(addrStorage);
   msg_.namelen = len;
 #elif __EMSCRIPTEN__
@@ -808,7 +808,7 @@ void Msgheader::setName(sockaddr_storage* addrStorage, size_t len) {
 }
 
 void Msgheader::setIovecs(const struct iovec* vec, size_t iovec_len) {
-#if defined(_WIN32) && !defined(__MINGW64__)
+#ifdef _WIN32
   msg_.dwBufferCount = (DWORD)iovec_len;
   wsaBufs_.reset(new WSABUF[iovec_len]);
   msg_.lpBuffers = wsaBufs_.get();
@@ -823,7 +823,7 @@ void Msgheader::setIovecs(const struct iovec* vec, size_t iovec_len) {
 }
 
 void Msgheader::setCmsgPtr(char* ctrlBuf) {
-#if defined(_WIN32) && !defined(__MINGW64__)
+#ifdef _WIN32
   msg_.Control.buf = ctrlBuf;
 #else
   msg_.msg_control = ctrlBuf;
@@ -831,7 +831,7 @@ void Msgheader::setCmsgPtr(char* ctrlBuf) {
 }
 
 void Msgheader::setCmsgLen(size_t len) {
-#if defined(_WIN32) && !defined(__MINGW64__)
+#ifdef _WIN32
   msg_.Control.len = len;
 #else
   msg_.msg_controllen = len;
@@ -839,7 +839,7 @@ void Msgheader::setCmsgLen(size_t len) {
 }
 
 void Msgheader::setFlags(int flags) {
-#if defined(_WIN32) && !defined(__MINGW64__)
+#ifdef _WIN32
   msg_.dwFlags = flags;
 #else
   msg_.msg_flags = flags;
@@ -849,7 +849,7 @@ void Msgheader::setFlags(int flags) {
 void Msgheader::incrCmsgLen(size_t val) {
   FOLLY_PUSH_WARNING
   FOLLY_CLANG_DISABLE_WARNING("-Wundef")
-#if defined(_WIN32) && !defined(__MINGW64__)
+#ifdef _WIN32
   msg_.Control.len += WSA_CMSG_SPACE(val);
 #elif __EMSCRIPTEN__
   assert(false); // not supported in emcc
@@ -870,12 +870,10 @@ XPLAT_MSGHDR* Msgheader::getMsg() {
 XPLAT_CMSGHDR* Msgheader::cmsgNextHrd(XPLAT_CMSGHDR* cm) {
   FOLLY_PUSH_WARNING
   FOLLY_CLANG_DISABLE_WARNING("-Wundef")
-#if defined(_WIN32) && !defined(__MINGW64__)
+#ifdef _WIN32
   return WSA_CMSG_NXTHDR(&msg_, cm);
 #elif __EMSCRIPTEN__
   assert(false); // not supported in emcc
-#elif defined(__MINGW64__)
-  return NULL;
 #else
   return CMSG_NXTHDR(&msg_, cm);
 #endif
@@ -885,12 +883,10 @@ XPLAT_CMSGHDR* Msgheader::cmsgNextHrd(XPLAT_CMSGHDR* cm) {
 XPLAT_CMSGHDR* Msgheader::cmsgFirstHrd() {
   FOLLY_PUSH_WARNING
   FOLLY_CLANG_DISABLE_WARNING("-Wundef")
-#if defined(_WIN32) && !defined(__MINGW64__)
+#ifdef _WIN32
   return WSA_CMSG_FIRSTHDR(&msg_);
 #elif __EMSCRIPTEN__
   assert(false); // not supported in emcc
-#elif defined(__MINGW64__)
-  return NULL;
 #else
   return CMSG_FIRSTHDR(&msg_);
 #endif

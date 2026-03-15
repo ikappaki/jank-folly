@@ -122,7 +122,7 @@ thread_local bool SkipAtForkHandlers::value;
 void invoke_pthread_atfork(
     void (*prepare)(), void (*parent)(), void (*child)()) {
   int ret = 0;
-#if FOLLY_HAVE_PTHREAD_ATFORK && !defined(__MINGW64__) // if no pthread_atfork, probably no fork either
+#if FOLLY_HAVE_PTHREAD_ATFORK // if no pthread_atfork, probably no fork either
   ret = pthread_atfork(prepare, parent, child);
 #endif
   if (ret != 0) {
