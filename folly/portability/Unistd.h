@@ -31,11 +31,10 @@ ssize_t pread64(int fd, void* buf, size_t count, off64_t offset);
 
 #else
 
+#include <cstdint>
 #ifdef __MINGW64__
 #include <cstdio>
 #endif
-
-#include <cstdint>
 
 #include <process.h> // @manual
 
@@ -89,7 +88,8 @@ pid_t getppid();
 int getuid();
 int isatty(int fh);
 int lockf(int fd, int cmd, off_t len);
-#ifndef __MINGW64__
+#ifdef __MINGW64__
+#else
 off_t lseek(int fh, off_t off, int orig);
 off64_t lseek64(int fh, off64_t off, int orig);
 #endif

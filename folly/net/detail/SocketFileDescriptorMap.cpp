@@ -81,7 +81,7 @@ static int closeOnlyFileDescriptor(int fd) {
 #elif defined(__MINGW64__)
   c = ::_close(fd); // just call close normally
 #else
-# error "unsupported"
+#error "unsupported"
 #endif
   // We're at the core, we don't get the luxery of SCOPE_EXIT because
   // of circular dependencies.
