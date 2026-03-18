@@ -286,7 +286,8 @@ int lockf(int fd, int cmd, off_t len) {
   return _locking(fd, cmd, len);
 }
 
-#ifndef __MINGW64__
+#ifdef __MINGW64__
+#else
 off_t lseek(int fh, off_t off, int orig) {
   return _lseek(fh, off, orig);
 }
