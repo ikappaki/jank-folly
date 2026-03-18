@@ -262,11 +262,6 @@ int getdtablesize() {
   return _getmaxstdio();
 }
 
-#ifdef __MINGW64__
-typedef int gid_t;
-typedef int uid_t;
-#endif
-
 gid_t getgid() {
   return 1;
 }
@@ -290,8 +285,6 @@ int isatty(int fh) {
 int lockf(int fd, int cmd, off_t len) {
   return _locking(fd, cmd, len);
 }
-
-int unlink(const char *path) { return _unlink(path); };
 
 #ifndef __MINGW64__
 off_t lseek(int fh, off_t off, int orig) {
@@ -414,6 +407,10 @@ int truncate(const char* path, off_t len) {
     return -1;
   }
   return _close(fd) ? -1 : 0;
+}
+
+int unlink(const char *path) {
+  return _unlink(path);
 }
 
 int usleep(unsigned int ms) {

@@ -16,7 +16,8 @@
 
 #include <folly/concurrency/CacheLocality.h>
 
-#ifndef _MSC_VER
+#ifdef __MINGW64__
+#elif !defined(_MSC_VER)
 #define _GNU_SOURCE 1 // for RTLD_NOLOAD
 #include <dlfcn.h>
 #endif
@@ -34,9 +35,6 @@
 #include <folly/hash/Hash.h>
 #include <folly/lang/Exception.h>
 #include <folly/portability/Unistd.h>
-#ifdef _WIN32
-#include <folly/portability/Windows.h>
-#endif
 #include <folly/system/ThreadId.h>
 
 namespace folly {
@@ -53,13 +51,7 @@ static CacheLocality getSystemLocalityInfo() {
     }
   }
 
-#ifdef _WIN32
-  SYSTEM_INFO sysinfo;
-  GetSystemInfo(&sysinfo);
-  long numCpus = sysinfo.dwNumberOfProcessors;
-#else
   long numCpus = sysconf(_SC_NPROCESSORS_CONF);
-#endif
   if (numCpus <= 0) {
     // This shouldn't happen, but if it does we should try to keep
     // going.  We are probably not going to be able to parse /sys on
@@ -330,7 +322,7 @@ CacheLocality CacheLocality::uniform(size_t numCpus) {
 ////////////// Getcpu
 
 Getcpu::Func Getcpu::resolveVdsoFunc() {
-#if !defined(FOLLY_HAVE_LINUX_VDSO) || defined(FOLLY_SANITIZE_MEMORY) || defined(_WIN32)
+#if !defined(FOLLY_HAVE_LINUX_VDSO) || defined(FOLLY_SANITIZE_MEMORY)
   return nullptr;
 #else
   void* h = dlopen("linux-vdso.so.1", RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
