@@ -89,10 +89,6 @@ pid_t getppid();
 int getuid();
 int isatty(int fh);
 int lockf(int fd, int cmd, off_t len);
-
-// Additional unistd functions provided to support jank libraries
-int unlink(const char *path);
-
 #ifndef __MINGW64__
 off_t lseek(int fh, off_t off, int orig);
 off64_t lseek64(int fh, off64_t off, int orig);
@@ -108,6 +104,7 @@ void* sbrk(intptr_t i);
 unsigned int sleep(unsigned int seconds);
 long sysconf(int tp);
 int truncate(const char* path, off_t len);
+int unlink(const char *path);
 int usleep(unsigned int ms);
 ssize_t write(int fh, void const* buf, size_t count);
 } // namespace unistd

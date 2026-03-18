@@ -55,7 +55,7 @@ uint32_t getMaxDeferredReadersSlow(relaxed_atomic<uint32_t>& cache) {
 }
 
 long getCurrentThreadInvoluntaryContextSwitchCount() {
-#if defined(RUSAGE_THREAD) && !defined(_WIN32)
+#ifdef RUSAGE_THREAD
   struct rusage usage;
   if (getrusage(RUSAGE_THREAD, &usage)) {
     return 0;
