@@ -18,7 +18,10 @@
 
 #include <sys/types.h>
 
-#ifdef _WIN32
+#ifdef __MINGW64__
+using uid_t = int;
+using gid_t = int;
+#elif defined(_WIN32)
 #include <basetsd.h> // @manual
 
 // This is a massive pain to have be an `int` due to the pthread implementation

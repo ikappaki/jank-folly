@@ -28,6 +28,9 @@
 #ifdef _WIN32
 
 #include <WS2tcpip.h> // @manual
+#ifdef __MINGW64__
+#include <mswsock.h>
+#endif
 
 using nfds_t = int;
 using sa_family_t = ADDRESS_FAMILY;
